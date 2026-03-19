@@ -1,0 +1,2435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algorand Developer Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Algorand brand colors — sourced from algorand.co */
+    --algo-black: #080C18;        /* page background — deep navy */
+    --algo-white: #FFFFFF;
+    --algo-off-white: #F0F0F0;
+    --algo-blue: #3452FF;         /* primary brand accent — Algorand blue */
+    --algo-blue-dim: #3452FF18;
+    --algo-blue-border: #3452FF35;
+    --algo-blue-hover: #2A42E8;
+    --algo-gray-1: #0E1220;       /* card backgrounds */
+    --algo-gray-2: #161B2E;       /* surface 2 */
+    --algo-gray-3: #1E2440;       /* borders */
+    --algo-gray-4: #2A3258;       /* stronger borders/hover */
+    --algo-gray-5: #5A6480;       /* muted text */
+    --algo-gray-6: #8A94AA;       /* secondary text */
+    --algo-text: #E8EAF0;         /* primary text */
+    --algo-text-dim: #8A94AA;
+    --algo-text-muted: #4A5470;
+    --font-display: 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --nav-h: 64px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--algo-black);
+    color: var(--algo-text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    background: rgba(8,12,24,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--algo-gray-3);
+    display: flex; align-items: center;
+    padding: 0 48px;
+    gap: 40px;
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--algo-white);
+    letter-spacing: -0.02em;
+    margin-right: auto;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo-mark {
+    width: 28px; height: 28px;
+    background: var(--algo-blue);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #ffffff;
+    font-family: var(--font-display);
+  }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    font-size: 14px; color: var(--algo-gray-6);
+    text-decoration: none; transition: color 0.2s;
+    font-weight: 400;
+  }
+  .nav-links a:hover { color: var(--algo-text); }
+  .nav-links a.active { color: var(--algo-text); }
+  .nav-cta {
+    font-size: 13px; font-weight: 500;
+    padding: 8px 18px;
+    background: var(--algo-blue);
+    color: var(--algo-black);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    font-family: var(--font-body);
+  }
+  .nav-cta:hover { opacity: 0.88; background: var(--algo-blue-hover); }
+
+  /* PAGE WRAPPER */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* SECTION BASE */
+  section { padding: 100px 0; }
+  .container { max-width: 1160px; margin: 0 auto; padding: 0 48px; }
+
+  /* ===================== HOMEPAGE ===================== */
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    padding-top: var(--nav-h);
+    display: flex; align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--algo-gray-3) 1px, transparent 1px),
+      linear-gradient(90deg, var(--algo-gray-3) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
+  }
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, #3452FF12 0%, transparent 70%);
+    top: 20%; left: 55%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    position: relative; z-index: 1;
+    width: 100%;
+  }
+  .hero-label {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--algo-blue);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-label::before {
+    content: '';
+    display: block; width: 24px; height: 1px;
+    background: var(--algo-blue);
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 4.5vw, 58px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--algo-white);
+    margin-bottom: 24px;
+  }
+  h1 em { color: var(--algo-blue); font-style: normal; }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--algo-gray-6);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    max-width: 440px;
+  }
+  .hero-actions { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .btn-primary {
+    padding: 13px 28px;
+    background: var(--algo-blue);
+    color: var(--algo-black);
+    font-family: var(--font-body);
+    font-size: 14px; font-weight: 500;
+    border: none; border-radius: 8px;
+    cursor: pointer; text-decoration: none;
+    transition: opacity 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-ghost {
+    padding: 13px 28px;
+    background: transparent;
+    color: var(--algo-text);
+    font-family: var(--font-body);
+    font-size: 14px; font-weight: 400;
+    border: 1px solid var(--algo-gray-4);
+    border-radius: 8px;
+    cursor: pointer; text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-ghost:hover { border-color: var(--algo-gray-5); color: var(--algo-white); }
+
+  /* CODE DEMO */
+  .demo-box {
+    background: var(--algo-gray-1);
+    border: 1px solid var(--algo-gray-3);
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+  }
+  .demo-topbar {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--algo-gray-3);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .demo-dots { display: flex; gap: 6px; }
+  .demo-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .demo-dot:nth-child(1) { background: #ff5f57; }
+  .demo-dot:nth-child(2) { background: #ffbd2e; }
+  .demo-dot:nth-child(3) { background: #28ca41; }
+  .demo-tabs {
+    display: flex; gap: 4px; margin-left: auto;
+  }
+  .demo-tab {
+    font-size: 11px; font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--algo-gray-5);
+    background: transparent;
+    border: none;
+    transition: all 0.15s;
+    font-family: var(--font-body);
+  }
+  .demo-tab.active {
+    background: var(--algo-gray-3);
+    color: var(--algo-text);
+  }
+  .demo-selector {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--algo-gray-3);
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .demo-sel-btn {
+    font-size: 12px; font-weight: 400;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    color: var(--algo-gray-5);
+    background: transparent;
+    border: 1px solid var(--algo-gray-3);
+    transition: all 0.15s;
+    font-family: var(--font-body);
+  }
+  .demo-sel-btn.active {
+    border-color: var(--algo-blue-border);
+    color: var(--algo-blue);
+    background: var(--algo-blue-dim);
+  }
+  .demo-code {
+    padding: 24px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.8;
+    color: #c9c5b8;
+    min-height: 220px;
+    display: none;
+  }
+  .demo-code.active { display: block; }
+  .code-comment { color: var(--algo-gray-5); }
+  .code-kw { color: #c792ea; }
+  .code-str { color: #c3e88d; }
+  .code-fn { color: #82aaff; }
+  .code-num { color: #f78c6c; }
+  .code-prop { color: #89ddff; }
+  .demo-result {
+    padding: 14px 20px;
+    border-top: 1px solid var(--algo-gray-3);
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--algo-blue);
+  }
+  .result-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--algo-blue);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* SECTION LABEL */
+  .section-eyebrow {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--algo-blue);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-eyebrow::before {
+    content: '';
+    display: block; width: 20px; height: 1px;
+    background: var(--algo-blue);
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 3vw, 40px);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--algo-white);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    font-size: 16px;
+    color: var(--algo-gray-6);
+    margin-bottom: 56px;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  /* PATH CARDS */
+  .path-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .path-card {
+    background: var(--algo-gray-1);
+    border: 1px solid var(--algo-gray-3);
+    border-radius: 14px;
+    padding: 32px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+  .path-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--algo-blue);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .path-card:hover { border-color: var(--algo-gray-4); transform: translateY(-2px); }
+  .path-card:hover::before { transform: scaleX(1); }
+  .path-icon {
+    width: 44px; height: 44px;
+    background: var(--algo-blue-dim);
+    border: 1px solid var(--algo-blue-border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+  .path-title {
+    font-family: var(--font-display);
+    font-size: 20px; font-weight: 700;
+    color: var(--algo-white);
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .path-desc {
+    font-size: 14px; color: var(--algo-gray-6);
+    line-height: 1.6; margin-bottom: 24px;
+  }
+  .path-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+  .path-tag {
+    font-size: 11px; font-family: var(--font-mono);
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: var(--algo-gray-2);
+    color: var(--algo-gray-6);
+    border: 1px solid var(--algo-gray-3);
+  }
+  .path-cta {
+    font-size: 13px; font-weight: 500;
+    color: var(--algo-blue);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .path-cta::after { content: '→'; transition: transform 0.2s; }
+  .path-card:hover .path-cta::after { transform: translateX(4px); }
+
+  /* CAPABILITY GRID */
+  .cap-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .cap-card {
+    background: var(--algo-gray-1);
+    border: 1px solid var(--algo-gray-3);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .cap-card:hover { border-color: var(--algo-gray-4); }
+  .cap-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--algo-text-muted);
+    margin-bottom: 14px;
+  }
+  .cap-title {
+    font-family: var(--font-display);
+    font-size: 15px; font-weight: 600;
+    color: var(--algo-white);
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .cap-desc {
+    font-size: 13px; color: var(--algo-gray-6);
+    line-height: 1.6; margin-bottom: 16px;
+  }
+  .cap-tools { display: flex; flex-wrap: wrap; gap: 5px; }
+  .cap-tool {
+    font-size: 10px; font-family: var(--font-mono);
+    padding: 2px 8px; border-radius: 3px;
+    background: var(--algo-gray-2);
+    color: var(--algo-text-muted);
+    border: 1px solid var(--algo-gray-3);
+  }
+  .see-all-link {
+    display: flex; justify-content: center; margin-top: 40px;
+  }
+  .see-all-link a {
+    font-size: 13px; color: var(--algo-gray-5);
+    text-decoration: none;
+    border-bottom: 1px solid var(--algo-gray-4);
+    padding-bottom: 2px;
+    transition: color 0.2s;
+  }
+  .see-all-link a:hover { color: var(--algo-text); }
+
+  /* L1 SECTION */
+  .l1-section { background: var(--algo-gray-1); }
+  .l1-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .l1-feature-list { list-style: none; margin-top: 28px; }
+  .l1-feature-list li {
+    font-size: 14px; color: var(--algo-gray-6);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--algo-gray-3);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .l1-feature-list li::before {
+    content: '';
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--algo-blue);
+    flex-shrink: 0;
+  }
+
+  /* SOCIAL PROOF */
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .proof-card {
+    background: var(--algo-gray-1);
+    border: 1px solid var(--algo-gray-3);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .proof-logo {
+    font-family: var(--font-display);
+    font-size: 18px; font-weight: 700;
+    color: var(--algo-white);
+    margin-bottom: 14px;
+    letter-spacing: -0.02em;
+  }
+  .proof-quote {
+    font-size: 14px; color: var(--algo-gray-6);
+    line-height: 1.7; font-style: italic;
+    margin-bottom: 16px;
+  }
+  .proof-detail {
+    font-size: 12px; font-family: var(--font-mono);
+    color: var(--algo-text-muted);
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--algo-gray-1);
+    border-top: 1px solid var(--algo-gray-3);
+    border-bottom: 1px solid var(--algo-gray-3);
+  }
+  .stats-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 48px 0;
+    gap: 20px; flex-wrap: wrap;
+  }
+  .stat-item { text-align: center; flex: 1; min-width: 120px; }
+  .stat-value {
+    font-family: var(--font-display);
+    font-size: 32px; font-weight: 700;
+    color: var(--algo-white);
+    letter-spacing: -0.03em;
+    display: block;
+  }
+  .stat-label {
+    font-size: 12px; color: var(--algo-gray-5);
+    margin-top: 4px; display: block;
+  }
+  .stat-divider {
+    width: 1px; height: 48px;
+    background: var(--algo-gray-3);
+  }
+
+  /* NODE CTA */
+  .node-section {
+    border-top: 1px solid var(--algo-gray-3);
+    padding: 80px 0;
+  }
+  .node-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .node-card {
+    background: var(--algo-gray-1);
+    border: 1px solid var(--algo-gray-3);
+    border-radius: 12px;
+    padding: 32px;
+  }
+  .node-card-title {
+    font-family: var(--font-display);
+    font-size: 20px; font-weight: 700;
+    color: var(--algo-white);
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .node-card-desc {
+    font-size: 14px; color: var(--algo-gray-6);
+    line-height: 1.7; margin-bottom: 24px;
+  }
+
+  /* ===================== REFERENCE PAGE ===================== */
+  .ref-hero { padding: 120px 0 60px; }
+  .ref-hero h1 { font-size: clamp(32px, 4vw, 52px); margin-bottom: 16px; }
+  .ref-hero p {
+    font-size: 16px; color: var(--algo-gray-6);
+    max-width: 560px; line-height: 1.7;
+  }
+
+  .filter-bar {
+    position: sticky; top: var(--nav-h); z-index: 50;
+    background: rgba(8,12,24,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--algo-gray-3);
+    padding: 16px 0;
+  }
+  .filter-inner {
+    max-width: 1160px; margin: 0 auto; padding: 0 48px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .filter-label {
+    font-size: 12px; color: var(--algo-gray-5);
+    margin-right: 6px; font-weight: 500;
+  }
+  .filter-btn {
+    font-size: 12px; font-weight: 500;
+    padding: 6px 16px; border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid var(--algo-gray-3);
+    background: transparent;
+    color: var(--algo-gray-5);
+    transition: all 0.15s;
+    font-family: var(--font-body);
+  }
+  .filter-btn:hover { border-color: var(--algo-gray-5); color: var(--algo-text); }
+  .filter-btn.active {
+    background: var(--algo-blue);
+    border-color: var(--algo-blue);
+    color: var(--algo-black);
+  }
+
+  .ref-grid {
+    padding: 60px 0 100px;
+    display: flex; flex-direction: column; gap: 60px;
+  }
+  .ref-group { }
+  .ref-group-header {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--algo-gray-3);
+  }
+  .ref-group-title {
+    font-family: var(--font-display);
+    font-size: 22px; font-weight: 700;
+    color: var(--algo-white);
+    letter-spacing: -0.02em;
+  }
+  .ref-group-count {
+    font-size: 12px; font-family: var(--font-mono);
+    color: var(--algo-gray-5);
+  }
+  .ref-items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .ref-item {
+    background: var(--algo-gray-1);
+    border: 1px solid var(--algo-gray-3);
+    border-radius: 10px;
+    padding: 20px 22px;
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+  .ref-item:hover { border-color: var(--algo-gray-4); }
+  .ref-item-header {
+    display: flex; align-items: flex-start;
+    justify-content: space-between; gap: 12px;
+    margin-bottom: 8px;
+  }
+  .ref-item-name {
+    font-family: var(--font-display);
+    font-size: 15px; font-weight: 600;
+    color: var(--algo-white);
+    letter-spacing: -0.01em;
+  }
+  .ref-item-badge {
+    font-size: 10px; font-weight: 500;
+    padding: 2px 8px; border-radius: 3px;
+    white-space: nowrap; flex-shrink: 0;
+    font-family: var(--font-mono);
+  }
+  .badge-core { background: var(--algo-blue)15; color: var(--algo-blue); border: 1px solid var(--algo-blue-border); }
+  .badge-ext { background: #3452FF15; color: #8899FF; border: 1px solid #3452FF40; }
+  .badge-ref { background: #6B7FFF15; color: #8899FF; border: 1px solid #6B7FFF40; }
+  .badge-tool { background: #3452FF15; color: #8899FF; border: 1px solid #3452FF40; }
+  .ref-item-desc {
+    font-size: 12.5px; color: var(--algo-gray-6);
+    line-height: 1.6;
+  }
+  .ref-item-tags {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    margin-top: 12px;
+  }
+  .ref-item-tag {
+    font-size: 10px; font-family: var(--font-mono);
+    padding: 2px 7px; border-radius: 3px;
+    background: var(--algo-gray-2);
+    color: var(--algo-text-muted);
+  }
+
+  .hidden { display: none !important; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--algo-gray-3);
+    padding: 48px 0;
+  }
+  .footer-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 20px;
+  }
+  .footer-left {
+    font-family: var(--font-display);
+    font-size: 16px; font-weight: 700;
+    color: var(--algo-white);
+    letter-spacing: -0.02em;
+  }
+  .footer-right {
+    font-size: 13px; color: var(--algo-gray-5);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp 0.6s ease forwards; }
+  .fade-up-2 { animation: fadeUp 0.6s 0.1s ease both; }
+  .fade-up-3 { animation: fadeUp 0.6s 0.2s ease both; }
+  .fade-up-4 { animation: fadeUp 0.6s 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#" onclick="showPage('home')">
+    <div class="nav-logo-mark">A</div>
+    Developer Portal
+  </a>
+  <div class="nav-links">
+    <a href="#" onclick="showPage('home')" class="active" id="nav-home">Home</a>
+    <a href="#" onclick="showPage('dapp')" id="nav-dapp">Build a dApp</a>
+    <a href="#" onclick="showPage('payments')" id="nav-payments">Payments</a>
+    <a href="#" onclick="showPage('institutional')" id="nav-institutional">Institutional</a>
+    <a href="#" onclick="showPage('ref')" id="nav-ref">Reference</a>
+    <a href="#" style="color:var(--algo-gray-5)">Discord</a>
+  </div>
+  <a class="nav-cta" href="#">Pick your path →</a>
+</nav>
+
+<!-- ==================== HOME PAGE ==================== -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="container">
+      <div class="hero-inner">
+        <div class="fade-up">
+          <div class="hero-label">Algorand Developer Portal</div>
+          <h1>Build financial infrastructure that <em>actually ships.</em></h1>
+          <p class="hero-sub">Native asset operations, sub-3-second finality, and fixed fees — without the smart contract overhead most chains require for basic operations.</p>
+          <div class="hero-actions">
+            <a class="btn-primary" href="#">Pick your path</a>
+            <a class="btn-ghost" href="#">Jump to docs</a>
+          </div>
+        </div>
+
+        <!-- CODE DEMO -->
+        <div class="demo-box fade-up-2">
+          <div class="demo-topbar">
+            <div class="demo-dots">
+              <div class="demo-dot"></div>
+              <div class="demo-dot"></div>
+              <div class="demo-dot"></div>
+            </div>
+            <div class="demo-tabs">
+              <button class="demo-tab active" onclick="switchLang('ts')">TypeScript</button>
+              <button class="demo-tab" onclick="switchLang('py')">Python</button>
+            </div>
+          </div>
+          <div class="demo-selector">
+            <button class="demo-sel-btn active" onclick="switchDemo('wallet')">Connect wallet</button>
+            <button class="demo-sel-btn" onclick="switchDemo('asset')">Create asset</button>
+            <button class="demo-sel-btn" onclick="switchDemo('pay')">Send payment</button>
+          </div>
+
+          <!-- TS wallet -->
+          <div class="demo-code active" id="demo-ts-wallet"><span class="code-comment">// Add wallet connection to any React app</span>
+<span class="code-kw">import</span> { useWallet } <span class="code-kw">from</span> <span class="code-str">'@algorand/use-wallet'</span>
+
+<span class="code-kw">function</span> <span class="code-fn">App</span>() {
+  <span class="code-kw">const</span> { connect, activeAccount } = <span class="code-fn">useWallet</span>()
+
+  <span class="code-kw">return</span> (
+    &lt;<span class="code-prop">button</span> <span class="code-prop">onClick</span>={connect}&gt;
+      {activeAccount ? activeAccount.<span class="code-prop">address</span> : <span class="code-str">'Connect wallet'</span>}
+    &lt;/<span class="code-prop">button</span>&gt;
+  )
+}</div>
+
+          <!-- PY wallet -->
+          <div class="demo-code" id="demo-py-wallet"><span class="code-comment"># Connect to Algorand — no wallet install friction</span>
+<span class="code-kw">from</span> algosdk <span class="code-kw">import</span> account
+<span class="code-kw">from</span> algosdk.v2client <span class="code-kw">import</span> algod
+
+private_key, address = account.<span class="code-fn">generate_account</span>()
+client = algod.<span class="code-fn">AlgodClient</span>(token, server)
+
+<span class="code-fn">print</span>(<span class="code-str">f"Connected: {address}"</span>)</div>
+
+          <!-- TS asset -->
+          <div class="demo-code" id="demo-ts-asset"><span class="code-comment">// Create a token — no contract, no ABI, one call</span>
+<span class="code-kw">const</span> result = <span class="code-kw">await</span> client.send.<span class="code-fn">assetCreate</span>({
+  sender: account.<span class="code-prop">address</span>,
+  total: <span class="code-num">1_000_000n</span>,
+  decimals: <span class="code-num">6</span>,
+  unitName: <span class="code-str">'USDC'</span>,
+  assetName: <span class="code-str">'USD Coin'</span>,
+})
+
+<span class="code-fn">console</span>.<span class="code-fn">log</span>(<span class="code-str">'Asset ID:'</span>, result.<span class="code-prop">assetId</span>)</div>
+
+          <!-- PY asset -->
+          <div class="demo-code" id="demo-py-asset"><span class="code-comment"># Create a token — no smart contract required</span>
+<span class="code-kw">from</span> algosdk.transaction <span class="code-kw">import</span> AssetConfigTxn
+
+txn = <span class="code-fn">AssetConfigTxn</span>(
+    sender=address, total=<span class="code-num">1_000_000</span>,
+    decimals=<span class="code-num">6</span>, unit_name=<span class="code-str">"USDC"</span>,
+    asset_name=<span class="code-str">"USD Coin"</span>,
+    sp=client.<span class="code-fn">suggested_params</span>()
+)
+txid = client.<span class="code-fn">send_transaction</span>(txn.<span class="code-fn">sign</span>(pk))</div>
+
+          <!-- TS pay -->
+          <div class="demo-code" id="demo-ts-pay"><span class="code-comment">// Fixed fee. Settled in under 3 seconds.</span>
+<span class="code-kw">const</span> result = <span class="code-kw">await</span> client.send.<span class="code-fn">payment</span>({
+  sender: sender.<span class="code-prop">address</span>,
+  receiver: recipient,
+  amount: AlgoAmount.<span class="code-fn">Algo</span>(<span class="code-num">10</span>),
+})
+
+<span class="code-fn">console</span>.<span class="code-fn">log</span>(<span class="code-str">'Settled:'</span>, result.<span class="code-prop">txIds</span>[<span class="code-num">0</span>])</div>
+
+          <!-- PY pay -->
+          <div class="demo-code" id="demo-py-pay"><span class="code-comment"># Sub-3-second settlement, always fixed fee</span>
+<span class="code-kw">from</span> algosdk.transaction <span class="code-kw">import</span> PaymentTxn
+
+txn = <span class="code-fn">PaymentTxn</span>(
+    sender=sender, receiver=recipient,
+    amt=<span class="code-num">10_000_000</span>,
+    sp=client.<span class="code-fn">suggested_params</span>()
+)
+txid = client.<span class="code-fn">send_transaction</span>(txn.<span class="code-fn">sign</span>(pk))</div>
+
+          <div class="demo-result">
+            <div class="result-dot"></div>
+            <span id="demo-result-text">Connected: ALGO3X...F9QK → mainnet</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PATH PICKER -->
+  <section>
+    <div class="container">
+      <div class="section-eyebrow">What are you building?</div>
+      <h2>Pick your path. Start where you are.</h2>
+      <p class="section-sub">You don't have to understand the full stack to get started. Pick the path that fits your use case.</p>
+      <div class="path-grid">
+        <a class="path-card" href="#" onclick="showPage('dapp')">
+          <div class="path-icon">⬡</div>
+          <div class="path-title">Build a dApp</div>
+          <p class="path-desc">Users connect wallets. Algorand handles the rest. Add wallet connection in minutes, support MetaMask users without asking them to change anything.</p>
+          <div class="path-tags">
+            <span class="path-tag">use-wallet</span>
+            <span class="path-tag">SDKs</span>
+            <span class="path-tag">fee sponsor</span>
+            <span class="path-tag">contracts</span>
+          </div>
+          <div class="path-cta">Start building a dApp</div>
+        </a>
+        <a class="path-card" href="#" onclick="showPage('payments')">
+          <div class="path-icon">⇄</div>
+          <div class="path-title">Integrate payments</div>
+          <p class="path-desc">Algorand as the rail. Your users never see it. Fixed fees your system can budget around, and a REST layer your existing services call like any other API.</p>
+          <div class="path-tags">
+            <span class="path-tag">REST API</span>
+            <span class="path-tag">stablecoin</span>
+            <span class="path-tag">MCP</span>
+            <span class="path-tag">x402</span>
+          </div>
+          <div class="path-cta">Start integrating payments</div>
+        </a>
+        <a class="path-card" href="#" onclick="showPage('institutional')">
+          <div class="path-icon">⊞</div>
+          <div class="path-title">Institutional infra</div>
+          <p class="path-desc">Custody and compliance built on standards your security team already approved. Key management decoupled. Algorand fits your stack — not the other way around.</p>
+          <div class="path-tags">
+            <span class="path-tag">Vault</span>
+            <span class="path-tag">xHD</span>
+            <span class="path-tag">HSM</span>
+            <span class="path-tag">MPC</span>
+          </div>
+          <div class="path-cta">Start building infra</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPABILITY GRID -->
+  <section style="padding-top:0">
+    <div class="container">
+      <div class="section-eyebrow">What Algorand lets you build</div>
+      <h2>Eight things you can do today.</h2>
+      <p class="section-sub">Most of them don't require a smart contract.</p>
+      <div class="cap-grid">
+        <div class="cap-card">
+          <div class="cap-num">01</div>
+          <div class="cap-title">Create and manage digital assets</div>
+          <p class="cap-desc">Issue tokens, stablecoins, NFTs natively at Layer 1. One API call. No contract deploy.</p>
+          <div class="cap-tools"><span class="cap-tool">Native ASA</span><span class="cap-tool">REST API</span><span class="cap-tool">Python SDK</span></div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">02</div>
+          <div class="cap-title">Move value in under 3 seconds</div>
+          <p class="cap-desc">Payments, B2B settlement, atomic swaps. Fixed fees. No rollbacks, no gas estimation.</p>
+          <div class="cap-tools"><span class="cap-tool">Atomic transfers</span><span class="cap-tool">Stablecoin</span></div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">03</div>
+          <div class="cap-title">Connect users to your dApp</div>
+          <p class="cap-desc">Wallet connection in minutes. MetaMask users via derived accounts — no new wallet needed.</p>
+          <div class="cap-tools"><span class="cap-tool">use-wallet</span><span class="cap-tool">Derived accounts</span></div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">04</div>
+          <div class="cap-title">Write and deploy smart contracts</div>
+          <p class="cap-desc">DeFi, RWA, prediction markets in Python or TypeScript. Same compiler spec, no tradeoffs.</p>
+          <div class="cap-tools"><span class="cap-tool">Compiler</span><span class="cap-tool">Local dev</span><span class="cap-tool">Explorer</span></div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">05</div>
+          <div class="cap-title">Let agents pay for things</div>
+          <p class="cap-desc">One HTTP call. Fixed fees agents can budget. Sub-3s finality. No blockchain SDK required.</p>
+          <div class="cap-tools"><span class="cap-tool">MCP server</span><span class="cap-tool">x402</span><span class="cap-tool">REST API</span></div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">06</div>
+          <div class="cap-title">Build institutional custody</div>
+          <p class="cap-desc">HSM support, MPC, compliance-ready signing. Fits your existing security model.</p>
+          <div class="cap-tools"><span class="cap-tool">Vault</span><span class="cap-tool">xHD</span><span class="cap-tool">Custody SDK</span></div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">07</div>
+          <div class="cap-title">Read and index the chain</div>
+          <p class="cap-desc">Query balances, asset info, transaction history. No node required — just an API call.</p>
+          <div class="cap-tools"><span class="cap-tool">Indexer API</span><span class="cap-tool">algod</span><span class="cap-tool">Explorer</span></div>
+        </div>
+        <div class="cap-card">
+          <div class="cap-num">08</div>
+          <div class="cap-title">Replace passwords with passkeys</div>
+          <p class="cap-desc">Users authenticate with their wallet. Works across Web2 and Web3 surfaces. Zero UX friction.</p>
+          <div class="cap-tools"><span class="cap-tool">Passkey auth</span><span class="cap-tool">DID</span></div>
+        </div>
+      </div>
+      <div class="see-all-link">
+        <a href="#" onclick="showPage('ref')">See the full product and tool inventory →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- L1 DIFFERENTIATOR -->
+  <section class="l1-section">
+    <div class="container">
+      <div class="l1-inner">
+        <div>
+          <div class="section-eyebrow">The part most chains skip</div>
+          <h2>Most of what you need is already in Layer 1.</h2>
+          <p style="font-size:15px;color:var(--algo-gray-6);line-height:1.7;margin-bottom:8px;">On most chains, basic token operations require deploying a smart contract. An ERC-20 just to create a token. Algorand doesn't work that way.</p>
+          <p style="font-size:15px;color:var(--algo-gray-6);line-height:1.7;margin-bottom:28px;">Assets are native to the protocol. Create, transfer, freeze, clawback, burn — these are transaction types, not contract calls.</p>
+          <ul class="l1-feature-list">
+            <li>Token and NFT creation</li>
+            <li>Asset transfers and atomic swaps</li>
+            <li>Freeze and clawback operations</li>
+            <li>Native multisig</li>
+            <li>Account rekeying</li>
+            <li>Read any wallet's holdings</li>
+          </ul>
+        </div>
+        <div class="demo-box">
+          <div class="demo-topbar">
+            <div class="demo-dots">
+              <div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div>
+            </div>
+            <span style="font-size:12px;color:var(--algo-gray-5);margin-left:8px;">create_token.ts</span>
+          </div>
+          <div class="demo-code active" style="min-height:180px"><span class="code-comment">// No contract. No ABI. No bytecode.</span>
+<span class="code-comment">// This is a native transaction type.</span>
+
+<span class="code-kw">const</span> result = <span class="code-kw">await</span> client.send.<span class="code-fn">assetCreate</span>({
+  sender: account.<span class="code-prop">address</span>,
+  total: <span class="code-num">21_000_000n</span>,
+  decimals: <span class="code-num">8</span>,
+  unitName: <span class="code-str">'BTC'</span>,
+  assetName: <span class="code-str">'My Token'</span>,
+  manager: account.<span class="code-prop">address</span>,
+  freeze: account.<span class="code-prop">address</span>,
+  clawback: account.<span class="code-prop">address</span>,
+})
+
+<span class="code-fn">console</span>.<span class="code-fn">log</span>(<span class="code-str">`Token live: ASA #${result.assetId}`</span>)</div>
+          <div class="demo-result">
+            <div class="result-dot"></div>
+            <span>Token live: ASA #1234567890 · fee: 0.001 ALGO · 2.8s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF -->
+  <section>
+    <div class="container">
+      <div class="section-eyebrow">In production, not just testnet</div>
+      <h2>Real teams, real applications.</h2>
+      <p class="section-sub">These aren't proofs of concept. They're live products built by teams who evaluated their options and chose Algorand.</p>
+      <div class="proof-grid">
+        <div class="proof-card">
+          <div class="proof-logo">Tinyman</div>
+          <p class="proof-quote">"Native ASAs meant no wrapped tokens, no bridge risk. The DEX mechanics we needed were already in the protocol."</p>
+          <div class="proof-detail">Decentralized exchange · billions in volume</div>
+        </div>
+        <div class="proof-card">
+          <div class="proof-logo">Folks Finance</div>
+          <p class="proof-quote">"Algorand Python let us write lending logic the same way we'd write any backend service. The learning curve was days, not months."</p>
+          <div class="proof-detail">Lending protocol · built in Algorand Python</div>
+        </div>
+        <div class="proof-card">
+          <div class="proof-logo">Kraken</div>
+          <p class="proof-quote">"Fast, low-cost USDC transactions for millions of customers. Algorand's finality model was exactly what we needed."</p>
+          <div class="proof-detail">Global exchange · USDC on Algorand · 2026</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-bar" style="padding:0">
+    <div class="container">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <span class="stat-value">~2.9s</span>
+          <span class="stat-label">Average finality</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">10k</span>
+          <span class="stat-label">TPS capacity</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">100%</span>
+          <span class="stat-label">Uptime since 2019</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">0</span>
+          <span class="stat-label">Forks ever</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">Fixed</span>
+          <span class="stat-label">Transaction fees</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NODE CTA -->
+  <section class="node-section">
+    <div class="container">
+      <div class="section-eyebrow">One more thing</div>
+      <h2 style="margin-bottom:40px">You're building on it. You could also secure it.</h2>
+      <div class="node-grid">
+        <div class="node-card">
+          <div class="node-card-title">For builders — the pragmatic case</div>
+          <p class="node-card-desc">Running your own node gives you a private API endpoint, faster chain data, and a direct stake in the uptime your application depends on. Setup takes minutes with the node installer.</p>
+          <a class="btn-ghost" href="#">Set up a node →</a>
+        </div>
+        <div class="node-card">
+          <div class="node-card-title">For everyone — the honest pitch</div>
+          <p class="node-card-desc">The network runs because people choose to secure it. Algorand's Pure Proof-of-Stake means anyone can participate — no mining hardware, no minimum stake. Just a node and a decision to show up.</p>
+          <a class="btn-ghost" href="#">Learn about participation →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">Algorand Developer Portal</div>
+        <div class="footer-right">© 2026 Algorand Foundation</div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- end home page -->
+
+<!-- ==================== REFERENCE PAGE ==================== -->
+<div class="page" id="page-ref">
+
+  <div class="ref-hero">
+    <div class="container">
+      <div class="section-eyebrow">Full inventory</div>
+      <h1>Everything in the box.</h1>
+      <p>Every tool, API, SDK, and resource — organized by group. Filter to find what your project needs, or browse the full stack.</p>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-inner">
+      <span class="filter-label">Filter by</span>
+      <button class="filter-btn active" onclick="filterRef('all')">All</button>
+      <button class="filter-btn" onclick="filterRef('core')">Core</button>
+      <button class="filter-btn" onclick="filterRef('extension')">Extensions</button>
+      <button class="filter-btn" onclick="filterRef('reference')">Reference</button>
+      <button class="filter-btn" onclick="filterRef('tool')">Tools</button>
+      <button class="filter-btn" onclick="filterRef('dapp')">dApp</button>
+      <button class="filter-btn" onclick="filterRef('payments')">Payments</button>
+      <button class="filter-btn" onclick="filterRef('institutional')">Institutional</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="ref-grid" id="ref-grid">
+
+      <!-- GROUP: Core -->
+      <div class="ref-group" data-group="core-group">
+        <div class="ref-group-header">
+          <div class="ref-group-title">Core</div>
+          <div class="ref-group-count">Required for everything — no install needed</div>
+        </div>
+        <div class="ref-items">
+          <div class="ref-item" data-tags="core dapp payments institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">algod REST API</div>
+              <span class="ref-item-badge badge-core">core</span>
+            </div>
+            <p class="ref-item-desc">Submit transactions, read current chain state, query accounts and assets. The primary interface to the Algorand network.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">HTTP</span><span class="ref-item-tag">any language</span><span class="ref-item-tag">no install</span></div>
+          </div>
+          <div class="ref-item" data-tags="core dapp payments institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Indexer REST API</div>
+              <span class="ref-item-badge badge-core">core</span>
+            </div>
+            <p class="ref-item-desc">Query historical chain data — transactions, balances, asset holdings, application state. Optimized for search and filtering.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">HTTP</span><span class="ref-item-tag">historical data</span></div>
+          </div>
+          <div class="ref-item" data-tags="core dapp payments institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">TypeScript SDK</div>
+              <span class="ref-item-badge badge-core">core</span>
+            </div>
+            <p class="ref-item-desc">Typed interfaces for transaction construction, account management, signing, and submission. Wraps the REST layer with ergonomic helpers.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">TypeScript</span><span class="ref-item-tag">npm</span></div>
+          </div>
+          <div class="ref-item" data-tags="core dapp payments institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Python SDK</div>
+              <span class="ref-item-badge badge-core">core</span>
+            </div>
+            <p class="ref-item-desc">Full-featured Python client for transaction construction, account management, signing, and submission.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">Python</span><span class="ref-item-tag">pip</span></div>
+          </div>
+          <div class="ref-item" data-tags="core payments institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Native asset operations</div>
+              <span class="ref-item-badge badge-core">core</span>
+            </div>
+            <p class="ref-item-desc">Create, transfer, freeze, clawback, and burn assets natively at Layer 1. No smart contract required. One transaction type per operation.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">L1 native</span><span class="ref-item-tag">no contract</span></div>
+          </div>
+          <div class="ref-item" data-tags="core payments institutional dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Atomic transfers</div>
+              <span class="ref-item-badge badge-core">core</span>
+            </div>
+            <p class="ref-item-desc">Group up to 16 transactions that succeed or fail together. Native to the protocol — no contract, no oracle, no coordination overhead.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">L1 native</span><span class="ref-item-tag">no contract</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GROUP: Extensions — dApp -->
+      <div class="ref-group" data-group="ext-dapp-group">
+        <div class="ref-group-header">
+          <div class="ref-group-title">Extensions — dApp</div>
+          <div class="ref-group-count">Add what your frontend needs</div>
+        </div>
+        <div class="ref-items">
+          <div class="ref-item" data-tags="extension dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">use-wallet</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Standard wallet connection library for Algorand dApps. Abstracts over all major wallets — Pera, Defly, Exodus — with a consistent interface.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">React</span><span class="ref-item-tag">npm</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Derived accounts</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Maps any EVM wallet address to a deterministic Algorand account via a native LogicSig. MetaMask users connect as normal — no new wallet required.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">use-wallet plugin</span><span class="ref-item-tag">EVM</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension dapp payments">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Fee sponsorship</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Let your dApp pay transaction fees on behalf of users. Removes friction for new users who haven't funded their account yet.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">transaction layer</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Smart contract compiler</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Compile Python and TypeScript to Algorand AVM bytecode. Identical feature sets and compiler specs for both languages.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">Python</span><span class="ref-item-tag">TypeScript</span><span class="ref-item-tag">Puya</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Project templates</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Production-ready starting points for DeFi, RWA, NFT marketplaces, and prediction markets. Clone and build — not scaffold and guess.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">DeFi</span><span class="ref-item-tag">RWA</span><span class="ref-item-tag">NFT</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">MBR management</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Helpers for managing the Minimum Balance Requirement — the small ALGO amount every account needs to hold assets.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">account layer</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GROUP: Extensions — Payments & Agentic -->
+      <div class="ref-group" data-group="ext-payments-group">
+        <div class="ref-group-header">
+          <div class="ref-group-title">Extensions — Payments &amp; Agentic</div>
+          <div class="ref-group-count">For human and agent-initiated transactions</div>
+        </div>
+        <div class="ref-items">
+          <div class="ref-item" data-tags="extension payments">
+            <div class="ref-item-header">
+              <div class="ref-item-name">JSON REST layer</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Thin HTTP layer serving Algorand functionality as plain JSON. Call from Java, Go, Python, or any language that speaks HTTP — no blockchain SDK required.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">any language</span><span class="ref-item-tag">JSON</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension payments">
+            <div class="ref-item-header">
+              <div class="ref-item-name">MCP server</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Public MCP server exposing Algorand actions natively inside LangChain and any MCP-compatible agent framework.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">AI agents</span><span class="ref-item-tag">LangChain</span><span class="ref-item-tag">MCP</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension payments">
+            <div class="ref-item-header">
+              <div class="ref-item-name">x402</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">HTTP payment protocol for agent-initiated API payments. Agent hits a paywalled endpoint, pays inline, continues — no pre-loaded credits.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">AI agents</span><span class="ref-item-tag">HTTP</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension payments">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Agent skills</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Pre-built Algorand capabilities packaged as agent skills — send payments, check balances, create assets — ready to plug into your agent framework.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">AI agents</span><span class="ref-item-tag">pre-built</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension payments">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Stablecoin references</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Asset IDs, integration guides, and settlement patterns for USDC and USDT on Algorand.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">USDC</span><span class="ref-item-tag">USDT</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GROUP: Extensions — Institutional -->
+      <div class="ref-group" data-group="ext-inst-group">
+        <div class="ref-group-header">
+          <div class="ref-group-title">Extensions — Institutional</div>
+          <div class="ref-group-count">Custody, compliance, and key management</div>
+        </div>
+        <div class="ref-items">
+          <div class="ref-item" data-tags="extension institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Key management (decoupled)</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">SDK key management is fully decoupled. Supply your own signing function — HSM, MPC, Vault, or custom. Algorand works with it, not around it.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">BYO KMS</span><span class="ref-item-tag">24-word</span><span class="ref-item-tag">xHD</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Hashicorp Vault integration</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">First-class Vault support via KV and Transit engines. Store mnemonics, manage signing keys, and rotate without changing public addresses.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">enterprise</span><span class="ref-item-tag">Vault</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Custody SDK</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">React Native SDK for building institutional wallets and custody applications. Multi-platform — iOS, Android, browser extensions.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">React Native</span><span class="ref-item-tag">iOS</span><span class="ref-item-tag">Android</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Passkey authentication</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Algorand-native passkey support. Hardware keys, biometrics, FIDO2. No password database, no credential exposure risk.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">FIDO2</span><span class="ref-item-tag">YubiKey</span><span class="ref-item-tag">biometric</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Native multisig</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">M-of-N multisig accounts at the protocol level. No smart contract required. Signatures collected off-chain, submitted as a single transaction.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">L1 native</span><span class="ref-item-tag">M-of-N</span></div>
+          </div>
+          <div class="ref-item" data-tags="extension institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Account rekeying</div>
+              <span class="ref-item-badge badge-ext">extension</span>
+            </div>
+            <p class="ref-item-desc">Transfer signing authority to a new key without changing the public address. Native to the protocol. Audit trail preserved on-chain.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">key rotation</span><span class="ref-item-tag">L1 native</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GROUP: Tools -->
+      <div class="ref-group" data-group="tools-group">
+        <div class="ref-group-header">
+          <div class="ref-group-title">Tools</div>
+          <div class="ref-group-count">Accelerate your development workflow</div>
+        </div>
+        <div class="ref-items">
+          <div class="ref-item" data-tags="tool dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">CLI</div>
+              <span class="ref-item-badge badge-tool">tool</span>
+            </div>
+            <p class="ref-item-desc">Command-line toolchain for scaffolding, compiling, deploying, and managing Algorand projects. One install, everything you need.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">scaffold</span><span class="ref-item-tag">deploy</span><span class="ref-item-tag">compile</span></div>
+          </div>
+          <div class="ref-item" data-tags="tool dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Local dev environment</div>
+              <span class="ref-item-badge badge-tool">tool</span>
+            </div>
+            <p class="ref-item-desc">Local Algorand network running in Docker. Test contracts without testnet friction, reset between runs, configure block time.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">Docker</span><span class="ref-item-tag">LocalNet</span></div>
+          </div>
+          <div class="ref-item" data-tags="tool dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Block explorer</div>
+              <span class="ref-item-badge badge-tool">tool</span>
+            </div>
+            <p class="ref-item-desc">Visual explorer for accounts, transactions, assets, and applications. Built-in smart contract debugger with step-through execution.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">LORA</span><span class="ref-item-tag">debugger</span></div>
+          </div>
+          <div class="ref-item" data-tags="tool dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Language servers</div>
+              <span class="ref-item-badge badge-tool">tool</span>
+            </div>
+            <p class="ref-item-desc">IDE extensions for Python and TypeScript smart contracts. Real-time, blockchain-aware error feedback directly in VSCode.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">VSCode</span><span class="ref-item-tag">Python</span><span class="ref-item-tag">TypeScript</span></div>
+          </div>
+          <div class="ref-item" data-tags="tool institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">LTN test suite</div>
+              <span class="ref-item-badge badge-tool">tool</span>
+            </div>
+            <p class="ref-item-desc">Long-term test network — persistent, stable, mirrors mainnet behavior. Validate custody workflows end-to-end before anything touches mainnet.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">institutional</span><span class="ref-item-tag">persistent</span></div>
+          </div>
+          <div class="ref-item" data-tags="tool dapp payments">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Testnet dispenser</div>
+              <span class="ref-item-badge badge-tool">tool</span>
+            </div>
+            <p class="ref-item-desc">Fund testnet accounts for development and testing. Available via CLI and API — no manual steps.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">testnet</span><span class="ref-item-tag">CLI</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GROUP: Reference -->
+      <div class="ref-group" data-group="ref-group">
+        <div class="ref-group-header">
+          <div class="ref-group-title">Reference</div>
+          <div class="ref-group-count">Docs, standards, and learning resources</div>
+        </div>
+        <div class="ref-items">
+          <div class="ref-item" data-tags="reference dapp payments institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">API reference (algod)</div>
+              <span class="ref-item-badge badge-ref">reference</span>
+            </div>
+            <p class="ref-item-desc">Full OpenAPI spec for the algod node REST API — every endpoint, parameter, and response schema.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">OpenAPI</span></div>
+          </div>
+          <div class="ref-item" data-tags="reference dapp payments institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">API reference (indexer)</div>
+              <span class="ref-item-badge badge-ref">reference</span>
+            </div>
+            <p class="ref-item-desc">Full OpenAPI spec for the indexer REST API — historical queries, search, and filtering.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">OpenAPI</span></div>
+          </div>
+          <div class="ref-item" data-tags="reference dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">SDK reference (TypeScript)</div>
+              <span class="ref-item-badge badge-ref">reference</span>
+            </div>
+            <p class="ref-item-desc">Full TypeDoc API reference for the Algorand TypeScript SDK — every class, method, and type.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">TypeDoc</span></div>
+          </div>
+          <div class="ref-item" data-tags="reference dapp payments">
+            <div class="ref-item-header">
+              <div class="ref-item-name">SDK reference (Python)</div>
+              <span class="ref-item-badge badge-ref">reference</span>
+            </div>
+            <p class="ref-item-desc">Full API reference for the Algorand Python SDK — every module, class, and function.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">Python docs</span></div>
+          </div>
+          <div class="ref-item" data-tags="reference dapp">
+            <div class="ref-item-header">
+              <div class="ref-item-name">ARC standards</div>
+              <span class="ref-item-badge badge-ref">reference</span>
+            </div>
+            <p class="ref-item-desc">Algorand Request for Comments — the full library of protocol standards, token standards, and interface specifications.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">standards</span><span class="ref-item-tag">50+ ARCs</span></div>
+          </div>
+          <div class="ref-item" data-tags="reference dapp payments institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Examples by use case</div>
+              <span class="ref-item-badge badge-ref">reference</span>
+            </div>
+            <p class="ref-item-desc">Batteries-included example apps organized by use case. Clone, run, and adapt — not read and reconstruct.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">clone and run</span></div>
+          </div>
+          <div class="ref-item" data-tags="reference dapp payments institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Docs AI</div>
+              <span class="ref-item-badge badge-ref">reference</span>
+            </div>
+            <p class="ref-item-desc">Built-in AI chat trained on Algorand docs. Get answers in real-time, 24/7 — no waiting for Discord responses.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">AI</span><span class="ref-item-tag">LLM-ready</span></div>
+          </div>
+          <div class="ref-item" data-tags="reference dapp payments institutional">
+            <div class="ref-item-header">
+              <div class="ref-item-name">Public MCP server</div>
+              <span class="ref-item-badge badge-ref">reference</span>
+            </div>
+            <p class="ref-item-desc">Public MCP endpoint for the Algorand developer docs. Use it in your AI toolchain, agent, or IDE extension.</p>
+            <div class="ref-item-tags"><span class="ref-item-tag">MCP</span><span class="ref-item-tag">AI toolchain</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end ref-grid -->
+  </div><!-- end container -->
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">Algorand Developer Portal</div>
+        <div class="footer-right">© 2026 Algorand Foundation</div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- end ref page -->
+
+<script>
+  let currentLang = 'ts';
+  let currentDemo = 'wallet';
+
+  const demoResults = {
+    wallet: 'Connected: ALGO3X...F9QK → mainnet',
+    asset: 'Asset created: ASA #1234567890 · fee: 0.001 ALGO',
+    pay: 'Settled: TXID-7F3K...9QR · 2.8s · fee: 0.001 ALGO'
+  };
+
+  function switchLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    updateDemo();
+  }
+
+  function switchDemo(demo) {
+    currentDemo = demo;
+    document.querySelectorAll('.demo-sel-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    updateDemo();
+  }
+
+  function updateDemo() {
+    document.querySelectorAll('.demo-code').forEach(c => c.classList.remove('active'));
+    const target = document.getElementById(`demo-${currentLang}-${currentDemo}`);
+    if (target) target.classList.add('active');
+    document.getElementById('demo-result-text').textContent = demoResults[currentDemo];
+  }
+
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(`page-${page}`).classList.add('active');
+    document.getElementById('nav-home').classList.toggle('active', page === 'home');
+    document.getElementById('nav-ref').classList.toggle('active', page === 'ref');
+    document.getElementById('nav-dapp').classList.toggle('active', page === 'dapp');
+    document.getElementById('nav-payments').classList.toggle('active', page === 'payments');
+    document.getElementById('nav-institutional').classList.toggle('active', page === 'institutional');
+    window.scrollTo(0, 0);
+  }
+
+  function filterRef(filter) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const groups = {
+      'core': ['core-group'],
+      'extension': ['ext-dapp-group', 'ext-payments-group', 'ext-inst-group'],
+      'reference': ['ref-group'],
+      'tool': ['tools-group'],
+      'dapp': ['core-group', 'ext-dapp-group', 'tools-group', 'ref-group'],
+      'payments': ['core-group', 'ext-payments-group', 'ref-group'],
+      'institutional': ['core-group', 'ext-inst-group', 'tools-group', 'ref-group'],
+    };
+
+    if (filter === 'all') {
+      document.querySelectorAll('.ref-group').forEach(g => g.style.display = '');
+      document.querySelectorAll('.ref-item').forEach(i => i.style.display = '');
+      return;
+    }
+
+    const showGroups = groups[filter] || [];
+    document.querySelectorAll('.ref-group').forEach(g => {
+      const gid = g.getAttribute('data-group');
+      g.style.display = showGroups.includes(gid) ? '' : 'none';
+    });
+
+    document.querySelectorAll('.ref-item').forEach(item => {
+      const tags = item.getAttribute('data-tags') || '';
+      const visible = tags.includes(filter);
+      item.style.display = visible ? '' : 'none';
+    });
+  }
+</script>
+
+<!-- ==================== PATH STYLES ==================== -->
+<style>
+  /* Shared path page styles */
+  .path-page-hero {
+    padding: 120px 0 80px;
+    border-bottom: 1px solid var(--algo-gray-3);
+    position: relative;
+    overflow: hidden;
+  }
+  .path-page-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--algo-gray-3) 1px, transparent 1px),
+      linear-gradient(90deg, var(--algo-gray-3) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.15;
+    mask-image: radial-gradient(ellipse 80% 80% at 20% 50%, black, transparent);
+  }
+  .path-breadcrumb {
+    font-size: 13px; color: var(--algo-gray-5);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .path-breadcrumb a {
+    color: var(--algo-gray-5); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .path-breadcrumb a:hover { color: var(--algo-text); }
+  .path-breadcrumb span { color: var(--algo-gray-4); }
+  .path-page-hero h1 {
+    font-size: clamp(32px, 4vw, 52px);
+    max-width: 700px; margin-bottom: 20px;
+  }
+  .path-intro {
+    font-size: 16px; color: var(--algo-gray-6);
+    max-width: 640px; line-height: 1.75;
+    margin-bottom: 36px;
+  }
+  .path-meta-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .path-meta-tag {
+    font-size: 12px; font-family: var(--font-mono);
+    padding: 4px 12px; border-radius: 4px;
+    background: var(--algo-blue-dim);
+    color: var(--algo-blue);
+    border: 1px solid var(--algo-blue-border);
+  }
+
+  /* Step layout */
+  .steps-container { padding: 80px 0 40px; }
+  .step {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 60px;
+    padding: 60px 0;
+    border-bottom: 1px solid var(--algo-gray-3);
+    align-items: start;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-sidebar {}
+  .step-number {
+    font-family: var(--font-mono);
+    font-size: 11px; color: var(--algo-blue);
+    letter-spacing: 0.1em; margin-bottom: 12px;
+  }
+  .step-label {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--algo-gray-5); margin-bottom: 16px;
+  }
+  .step-nav-title {
+    font-family: var(--font-display);
+    font-size: 20px; font-weight: 700;
+    color: var(--algo-white);
+    letter-spacing: -0.02em;
+    line-height: 1.2; margin-bottom: 16px;
+  }
+  .step-links { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
+  .step-link {
+    font-size: 13px; color: var(--algo-blue);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    transition: opacity 0.2s;
+  }
+  .step-link:hover { opacity: 0.75; }
+  .step-link::before { content: '→'; font-size: 11px; }
+  .step-body {}
+  .step-headline {
+    font-family: var(--font-display);
+    font-size: 26px; font-weight: 700;
+    color: var(--algo-white);
+    letter-spacing: -0.02em;
+    line-height: 1.2; margin-bottom: 16px;
+  }
+  .step-body p {
+    font-size: 15px; color: var(--algo-gray-6);
+    line-height: 1.75; margin-bottom: 16px;
+  }
+  .step-body p:last-of-type { margin-bottom: 0; }
+
+  /* Callout box */
+  .callout {
+    margin: 24px 0;
+    padding: 16px 20px;
+    background: var(--algo-blue-dim);
+    border: 1px solid var(--algo-blue-border);
+    border-left: 3px solid var(--algo-blue);
+    border-radius: 8px;
+    font-size: 14px; color: var(--algo-text);
+    line-height: 1.6;
+  }
+  .callout strong { color: var(--algo-white); font-weight: 600; }
+
+  /* Feature list */
+  .feature-list { list-style: none; margin: 20px 0; }
+  .feature-list li {
+    font-size: 14px; color: var(--algo-gray-6);
+    padding: 10px 0;
+    border-bottom: 1px solid var(--algo-gray-3);
+    display: flex; align-items: flex-start; gap: 12px;
+    line-height: 1.5;
+  }
+  .feature-list li:last-child { border-bottom: none; }
+  .feature-list li::before {
+    content: '';
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--algo-blue);
+    flex-shrink: 0; margin-top: 7px;
+  }
+  .feature-list li strong { color: var(--algo-text); font-weight: 500; }
+
+  /* Standards list */
+  .standards-list {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin: 20px 0;
+  }
+  .standard-item {
+    padding: 12px 16px;
+    background: var(--algo-gray-1);
+    border: 1px solid var(--algo-gray-3);
+    border-radius: 8px;
+    font-size: 13px; color: var(--algo-gray-6);
+    font-family: var(--font-mono);
+  }
+
+  /* Code block */
+  .code-block {
+    margin: 24px 0;
+    background: var(--algo-gray-1);
+    border: 1px solid var(--algo-gray-3);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .code-block-header {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--algo-gray-3);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .code-dots { display: flex; gap: 5px; }
+  .code-dot { width: 9px; height: 9px; border-radius: 50%; }
+  .code-dot:nth-child(1) { background: #ff5f57; }
+  .code-dot:nth-child(2) { background: #ffbd2e; }
+  .code-dot:nth-child(3) { background: #28ca41; }
+  .code-filename {
+    font-size: 11px; font-family: var(--font-mono);
+    color: var(--algo-gray-5); margin-left: 4px;
+  }
+  .code-block pre {
+    padding: 20px 24px;
+    font-family: var(--font-mono);
+    font-size: 12.5px; line-height: 1.8;
+    color: #c9c5b8; overflow-x: auto;
+    margin: 0;
+  }
+
+  /* Optional tag */
+  .optional-badge {
+    display: inline-block;
+    font-size: 11px; font-family: var(--font-mono);
+    padding: 2px 10px; border-radius: 20px;
+    background: var(--algo-gray-2);
+    color: var(--algo-gray-5);
+    border: 1px solid var(--algo-gray-3);
+    margin-left: 10px; vertical-align: middle;
+  }
+
+  /* Resources section */
+  .resources-section {
+    padding: 60px 0 100px;
+    border-top: 1px solid var(--algo-gray-3);
+    margin-top: 20px;
+  }
+  .resources-title {
+    font-family: var(--font-display);
+    font-size: 22px; font-weight: 700;
+    color: var(--algo-white);
+    letter-spacing: -0.02em; margin-bottom: 28px;
+  }
+  .resources-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .resource-card {
+    padding: 18px 20px;
+    background: var(--algo-gray-1);
+    border: 1px solid var(--algo-gray-3);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: border-color 0.2s;
+    display: block;
+  }
+  .resource-card:hover { border-color: var(--algo-gray-4); }
+  .resource-card-title {
+    font-size: 14px; font-weight: 500;
+    color: var(--algo-white); margin-bottom: 4px;
+  }
+  .resource-card-desc {
+    font-size: 12px; color: var(--algo-gray-5);
+    line-height: 1.5;
+  }
+  .resource-card-arrow {
+    font-size: 12px; color: var(--algo-blue);
+    margin-top: 10px; display: block;
+  }
+</style>
+
+<!-- ==================== PATH 1: BUILD A DAPP ==================== -->
+<div class="page" id="page-dapp">
+  <div class="path-page-hero">
+    <div class="container" style="position:relative;z-index:1">
+      <div class="path-breadcrumb">
+        <a href="#" onclick="showPage('home')">Developer Portal</a>
+        <span>/</span>
+        <span style="color:var(--algo-text)">Build a dApp</span>
+      </div>
+      <div class="section-eyebrow">Path 1</div>
+      <h1>Build a dApp on Algorand.</h1>
+      <p class="path-intro">You're building something with a frontend. Users will connect wallets, sign transactions, and interact with the chain — even if they don't know that's what they're doing. This is the path for that.<br><br>Algorand dApp development works with the tools you already know — TypeScript, React, Python backends — and adds a wallet connection layer, an optional smart contract layer, and a transaction model that won't surprise you.</p>
+      <div class="path-meta-tags">
+        <span class="path-meta-tag">TypeScript SDK</span>
+        <span class="path-meta-tag">Python SDK</span>
+        <span class="path-meta-tag">use-wallet</span>
+        <span class="path-meta-tag">fee sponsorship</span>
+        <span class="path-meta-tag">smart contracts</span>
+        <span class="path-meta-tag">derived accounts</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="steps-container">
+
+      <!-- STEP 1 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">01 / 05</div>
+          <div class="step-label">Required for everything</div>
+          <div class="step-nav-title">Start with the Core</div>
+          <div class="step-links">
+            <a class="step-link" href="#">TypeScript SDK</a>
+            <a class="step-link" href="#">Python SDK</a>
+            <a class="step-link" href="#">REST API reference</a>
+            <a class="step-link" href="#">Indexer API reference</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">The SDKs and APIs are your foundation.</div>
+          <p>Before you think about wallets or contracts, you need a way to talk to the chain. The Algorand TypeScript and Python SDKs handle transaction construction, account management, signing, and submission. The REST APIs (algod and indexer) sit underneath — use them directly if your stack prefers raw HTTP.</p>
+          <div class="callout">
+            <strong>Good to know:</strong> You can do a lot from here without ever touching a smart contract. Read wallet balances, query asset holdings, submit payments, create tokens — all native API calls. Most chains need a contract for this. Algorand doesn't.
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">02 / 05</div>
+          <div class="step-label">Get users in</div>
+          <div class="step-nav-title">Add wallet connection</div>
+          <div class="step-links">
+            <a class="step-link" href="#">use-wallet docs</a>
+            <a class="step-link" href="#">WalletConnect guide</a>
+            <a class="step-link" href="#">Supported wallets</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">use-wallet handles the connection layer.</div>
+          <p><code style="font-family:var(--font-mono);font-size:13px;color:var(--algo-blue)">use-wallet</code> is the standard wallet connection library for Algorand dApps. It abstracts over every major wallet — Pera, Defly, Exodus — and gives you a consistent interface regardless of what your user has installed.</p>
+          <p>Add it to any React app in minutes. It handles connection state, account switching, and transaction signing — you handle the rest.</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-filename">App.tsx</span>
+            </div>
+            <pre><span class="code-kw">import</span> { useWallet, WalletProvider } <span class="code-kw">from</span> <span class="code-str">'@algorand/use-wallet'</span>
+
+<span class="code-kw">function</span> <span class="code-fn">App</span>() {
+  <span class="code-kw">const</span> { connect, activeAccount, signTransactions } = <span class="code-fn">useWallet</span>()
+
+  <span class="code-kw">return</span> (
+    &lt;<span class="code-prop">button</span> <span class="code-prop">onClick</span>={() => <span class="code-fn">connect</span>()}&gt;
+      {activeAccount ? activeAccount.<span class="code-prop">address</span> : <span class="code-str">'Connect wallet'</span>}
+    &lt;/<span class="code-prop">button</span>&gt;
+  )
+}</pre>
+          </div>
+          <ul class="feature-list">
+            <li><strong>Supported wallets:</strong> Pera, Defly, Exodus, WalletConnect-compatible</li>
+            <li><strong>Connection state:</strong> Handles connect, disconnect, and account switching automatically</li>
+            <li><strong>Signing:</strong> Unified signing interface — your code doesn't change per wallet</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">03 / 05</div>
+          <div class="step-label">Build your transaction flows</div>
+          <div class="step-nav-title">Handle transactions</div>
+          <div class="step-links">
+            <a class="step-link" href="#">Fee sponsorship guide</a>
+            <a class="step-link" href="#">MBR management</a>
+            <a class="step-link" href="#">Transaction types</a>
+            <a class="step-link" href="#">Atomic transfers</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">Transaction construction, fee sponsorship, and MBR management.</div>
+          <p>Most dApp interactions involve building and submitting transactions. The SDK's TransactionComposer handles this — group transactions, set fees, and submit atomically.</p>
+          <p>Two things worth knowing upfront that most chains don't surface clearly:</p>
+          <div class="callout">
+            <strong>Fee sponsorship:</strong> Algorand lets your dApp pay transaction fees on behalf of users. This removes friction for new users who haven't funded their account yet. Set it up once in your backend and it's invisible to your users.
+          </div>
+          <div class="callout" style="margin-top:12px">
+            <strong>MBR management:</strong> Every Algorand account needs a small minimum balance to hold assets. Your dApp needs a strategy for this — either fund it upfront or communicate it clearly. Fee sponsorship can cover this too.
+          </div>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-filename">sponsor.ts</span>
+            </div>
+            <pre><span class="code-kw">const</span> composer = client.<span class="code-fn">newGroup</span>()
+
+<span class="code-comment">// Sponsor covers the MBR for the user</span>
+composer.<span class="code-fn">addPayment</span>({
+  sender: sponsorAccount,
+  receiver: userAccount,
+  amount: AlgoAmount.<span class="code-fn">MicroAlgo</span>(<span class="code-num">100000</span>),
+})
+
+<span class="code-comment">// User sends the asset transfer</span>
+composer.<span class="code-fn">addAssetTransfer</span>({
+  sender: userAccount,
+  receiver: recipient,
+  assetId: assetId,
+  amount: <span class="code-num">100n</span>,
+})
+
+<span class="code-kw">await</span> composer.<span class="code-fn">execute</span>()</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">04 / 05</div>
+          <div class="step-label">Optional — only if your use case requires it</div>
+          <div class="step-nav-title">Add smart contracts</div>
+          <div class="step-links">
+            <a class="step-link" href="#">Smart contract compiler</a>
+            <a class="step-link" href="#">Local dev environment</a>
+            <a class="step-link" href="#">Project templates</a>
+            <a class="step-link" href="#">Block explorer</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">Python or TypeScript. Same compiler, same features. <span class="optional-badge">optional</span></div>
+          <p>Not every dApp needs a smart contract. If yours does — DeFi logic, custom token mechanics, programmable conditions — Algorand's compiler supports both Python and TypeScript with identical feature sets.</p>
+          <p>Pick the language your team already knows. There's no performance difference, no feature gap. Both compile to the same AVM bytecode.</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-filename">contract.py</span>
+            </div>
+            <pre><span class="code-kw">from</span> algopy <span class="code-kw">import</span> ARC4Contract, arc4
+
+<span class="code-kw">class</span> <span class="code-fn">HelloWorld</span>(ARC4Contract):
+    <span class="code-prop">@arc4.abimethod</span>
+    <span class="code-kw">def</span> <span class="code-fn">hello</span>(<span class="code-kw">self</span>, name: arc4.String) -> arc4.String:
+        <span class="code-kw">return</span> <span class="code-str">"Hello, "</span> + name</pre>
+          </div>
+          <ul class="feature-list">
+            <li><strong>Smart contract compiler</strong> — Python and TypeScript, identical feature sets</li>
+            <li><strong>Local dev environment</strong> — full Algorand network running in Docker</li>
+            <li><strong>Block explorer</strong> — visual debugger with step-through execution</li>
+            <li><strong>Project templates</strong> — DeFi, RWA, NFT marketplace, prediction markets</li>
+            <li><strong>Test framework</strong> — unit testing for both Python and TypeScript contracts</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">05 / 05</div>
+          <div class="step-label">Advanced — EVM users, no new wallet</div>
+          <div class="step-nav-title">Extend your user base</div>
+          <div class="step-links">
+            <a class="step-link" href="#">Derived accounts docs</a>
+            <a class="step-link" href="#">Alpha Arcade demo</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">Derived accounts — your dApp works for MetaMask users too. <span class="optional-badge">optional</span></div>
+          <p>Derived accounts maps any EVM wallet address to a deterministic Algorand account via a native LogicSig. MetaMask users connect the same way they always do. Behind the scenes, they have a real Algorand account — no new wallet, no new seed phrase, no new signing flow.</p>
+          <p>Add one package. Your dApp immediately reaches the entire EVM user base.</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-filename">terminal</span>
+            </div>
+            <pre>npm install @algorand/derived-accounts</pre>
+          </div>
+          <ul class="feature-list">
+            <li><strong>How it works:</strong> User connects MetaMask → EVM address maps deterministically to an Algorand account → fund once via bridge → every dApp visit after that is smoother</li>
+            <li><strong>Protocol-native:</strong> The Algorand account is a native LogicSig. Authorization enforced chain-wide, not patched at the dApp level</li>
+            <li><strong>Zero custody risk:</strong> Signing on Algorand cannot touch EVM assets. No shared keys, no cross-chain exposure</li>
+            <li><strong>Reference integration:</strong> Alpha Arcade is live with derived accounts — see it working in production</li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- end steps -->
+  </div><!-- end container -->
+
+  <div class="container">
+    <div class="resources-section">
+      <div class="resources-title">Resources for dApp builders</div>
+      <div class="resources-grid">
+        <a class="resource-card" href="#"><div class="resource-card-title">dApp starter — TypeScript</div><div class="resource-card-desc">React frontend + TypeScript contracts. Clone and run.</div><span class="resource-card-arrow">→ View template</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">dApp starter — Python</div><div class="resource-card-desc">React frontend + Python backend + Python contracts.</div><span class="resource-card-arrow">→ View template</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">Example: DEX integration</div><div class="resource-card-desc">Working AMM example using native ASAs.</div><span class="resource-card-arrow">→ View example</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">Example: NFT marketplace</div><div class="resource-card-desc">Mint, list, and transfer NFTs without a contract.</div><span class="resource-card-arrow">→ View example</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">Block explorer</div><div class="resource-card-desc">Inspect transactions, debug contracts, visualize state.</div><span class="resource-card-arrow">→ Open explorer</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">Discord — #dapp-dev</div><div class="resource-card-desc">Get help from the community and the Algorand team.</div><span class="resource-card-arrow">→ Join Discord</span></a>
+      </div>
+    </div>
+  </div>
+
+  <footer><div class="container"><div class="footer-inner"><div class="footer-left">Algorand Developer Portal</div><div class="footer-right">© 2026 Algorand Foundation</div></div></div></footer>
+</div>
+
+<!-- ==================== PATH 2: INTEGRATE PAYMENTS ==================== -->
+<div class="page" id="page-payments">
+  <div class="path-page-hero">
+    <div class="container" style="position:relative;z-index:1">
+      <div class="path-breadcrumb">
+        <a href="#" onclick="showPage('home')">Developer Portal</a>
+        <span>/</span>
+        <span style="color:var(--algo-text)">Integrate payments</span>
+      </div>
+      <div class="section-eyebrow">Path 2</div>
+      <h1>Integrate Algorand payments into your existing stack.</h1>
+      <p class="path-intro">Algorand as a payment rail means sub-3-second settlement, fixed fees your system can budget around, and a REST layer your existing services can call without a blockchain SDK. This path is for teams wiring Algorand into backends that already exist — Java services, Python APIs, Go infrastructure, AI agents.<br><br>Your stack stays. Algorand adds a capability.</p>
+      <div class="path-meta-tags">
+        <span class="path-meta-tag">REST API</span>
+        <span class="path-meta-tag">Python SDK</span>
+        <span class="path-meta-tag">stablecoin</span>
+        <span class="path-meta-tag">MCP server</span>
+        <span class="path-meta-tag">x402</span>
+        <span class="path-meta-tag">Vault</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="steps-container">
+
+      <!-- STEP 1 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">01 / 05</div>
+          <div class="step-label">Required for everything</div>
+          <div class="step-nav-title">Start with the Core</div>
+          <div class="step-links">
+            <a class="step-link" href="#">REST API reference (algod)</a>
+            <a class="step-link" href="#">REST API reference (indexer)</a>
+            <a class="step-link" href="#">Python SDK</a>
+            <a class="step-link" href="#">TypeScript SDK</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">Everything you need is available over HTTP.</div>
+          <p>The Algorand REST APIs — algod for submitting transactions and reading current state, indexer for querying historical data — are your primary interface. Any service that can make an HTTP call can integrate Algorand payments without a blockchain SDK.</p>
+          <p>If you prefer native library support, the Python and TypeScript SDKs wrap the REST layer with typed interfaces and helper methods.</p>
+          <div class="callout">
+            <strong>For Java and Go engineers:</strong> The REST API is the path. Call it directly from your existing services. No new SDK, no new language dependency. Your payment service calls one HTTP endpoint and gets confirmation back in under 3 seconds.
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">02 / 05</div>
+          <div class="step-label">Start simple</div>
+          <div class="step-nav-title">Send your first payment</div>
+          <div class="step-links">
+            <a class="step-link" href="#">Transaction types</a>
+            <a class="step-link" href="#">USDC on Algorand</a>
+            <a class="step-link" href="#">Fee structure</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">A payment is one API call.</div>
+          <p>Stablecoin settlement on Algorand is a native asset transfer. No contract interaction, no ABI, no gas estimation. Fixed fee — currently 0.001 ALGO per transaction, regardless of amount.</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-filename">payment.py</span>
+            </div>
+            <pre><span class="code-kw">from</span> algosdk.transaction <span class="code-kw">import</span> AssetTransferTxn
+
+<span class="code-comment"># Send USDC — one transaction, fixed fee, settled in ~3 seconds</span>
+txn = <span class="code-fn">AssetTransferTxn</span>(
+    sender=sender_address,
+    receiver=recipient_address,
+    amt=<span class="code-num">10_000_000</span>,  <span class="code-comment"># 10 USDC (6 decimal places)</span>
+    index=USDC_ASSET_ID,
+    sp=client.<span class="code-fn">suggested_params</span>()
+)
+
+signed = txn.<span class="code-fn">sign</span>(private_key)
+txid = client.<span class="code-fn">send_transaction</span>(signed)
+
+result = <span class="code-fn">wait_for_confirmation</span>(client, txid)
+<span class="code-fn">print</span>(<span class="code-str">f"Settled in round {result['confirmed-round']}"</span>)</pre>
+          </div>
+          <ul class="feature-list">
+            <li><strong>Fee:</strong> 0.001 ALGO (~$0.0002) — fixed, always, regardless of amount</li>
+            <li><strong>Finality:</strong> ~2.9 seconds — not probabilistic confirmation, actual finality</li>
+            <li><strong>Uptime:</strong> 100% since 2019 — no rollbacks, no forks, no surprises in production</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">03 / 05</div>
+          <div class="step-label">Integration patterns</div>
+          <div class="step-nav-title">Wire into your existing stack</div>
+          <div class="step-links">
+            <a class="step-link" href="#">REST API integration guide</a>
+            <a class="step-link" href="#">Atomic transaction groups</a>
+            <a class="step-link" href="#">ISO 20022 mapping</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">Your Kafka stays. Your ledger stays. Algorand adds a settlement layer.</div>
+          <p>The most common integration pattern is a sidecar service — a lightweight Algorand client that sits alongside your existing infrastructure and handles chain interaction. Your core systems stay unchanged.</p>
+          <div class="callout">
+            <strong>The pattern:</strong> Kafka event → Algorand sidecar → algod REST API → confirmed settlement → Kafka event back. No changes to your core payment ledger. No changes to your compliance engine. One new service, clearly scoped.
+          </div>
+          <p>For ISO 20022 teams: Algorand's transaction model maps cleanly. Asset transfers are straightforward equivalents to payment messages. Atomic transaction groups handle multi-leg settlements without the coordination overhead you'd expect.</p>
+          <ul class="feature-list">
+            <li><strong>Atomic groups:</strong> Up to 16 transactions that succeed or fail together — native to the protocol, no oracle, no coordination contract</li>
+            <li><strong>Multi-leg settlement:</strong> Group a debit and credit in the same atomic transaction — either both go through or neither does</li>
+            <li><strong>Event confirmation:</strong> Poll for confirmation or use webhooks — under 3 seconds either way</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">04 / 05</div>
+          <div class="step-label">If your initiator is an AI agent</div>
+          <div class="step-nav-title">Agentic payments</div>
+          <div class="step-links">
+            <a class="step-link" href="#">MCP server docs</a>
+            <a class="step-link" href="#">x402 protocol</a>
+            <a class="step-link" href="#">Agent integration guide</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">Agents pay the same way humans do — one HTTP call. <span class="optional-badge">optional</span></div>
+          <p>If your payment flow involves an AI agent rather than a human, nothing changes about the Algorand side. The agent calls the same REST API, or uses the MCP server to discover and call Algorand actions natively inside LangChain or any MCP-compatible framework.</p>
+          <p>x402 is worth looking at for agent-initiated API payments specifically — an HTTP payment protocol that lets an agent pay for a paywalled resource inline, without pre-loaded credits or manual top-ups.</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-filename">agent.py</span>
+            </div>
+            <pre><span class="code-kw">from</span> langchain.agents <span class="code-kw">import</span> AgentExecutor
+<span class="code-kw">from</span> algorand_mcp <span class="code-kw">import</span> AlgorandTools
+
+tools = <span class="code-fn">AlgorandTools</span>(client=algorand_client)
+agent = <span class="code-fn">AgentExecutor</span>(tools=tools.<span class="code-fn">get_tools</span>())
+
+<span class="code-comment"># Agent can now send payments, check balances, create assets</span>
+result = agent.<span class="code-fn">invoke</span>({
+    <span class="code-str">"input"</span>: <span class="code-str">"Send 10 USDC to wallet_address for the API call"</span>
+})</pre>
+          </div>
+          <ul class="feature-list">
+            <li><strong>Fixed fees:</strong> Agents can budget correctly — no gas estimation, no variance</li>
+            <li><strong>Sub-3s finality:</strong> Agent doesn't wait on settlement, task loop continues immediately</li>
+            <li><strong>MCP server:</strong> Native Algorand skills inside any MCP-compatible agent framework</li>
+            <li><strong>x402:</strong> Inline payment for paywalled API resources — no pre-funded credits</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">05 / 05</div>
+          <div class="step-label">For teams with compliance requirements</div>
+          <div class="step-nav-title">Key management</div>
+          <div class="step-links">
+            <a class="step-link" href="#">Vault integration guide</a>
+            <a class="step-link" href="#">xHD derivation</a>
+            <a class="step-link" href="#">Key management reference</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">Key management that fits your existing security posture. <span class="optional-badge">optional</span></div>
+          <p>Algorand's SDK is decoupled from key management — you bring your own. If your team already uses Hashicorp Vault, xHD wallets, or hardware security modules, they work with Algorand out of the box.</p>
+          <p>24-word mnemonics are the standard. xHD derivation is supported. Your existing HSM and custody tooling already speaks these standards — there's nothing new to approve.</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-filename">vault_keys.py</span>
+            </div>
+            <pre><span class="code-kw">import</span> hvac
+<span class="code-kw">from</span> algosdk <span class="code-kw">import</span> mnemonic
+
+vault_client = hvac.<span class="code-fn">Client</span>(url=VAULT_ADDR, token=VAULT_TOKEN)
+secret = vault_client.secrets.kv.<span class="code-fn">read_secret_version</span>(
+    path=<span class="code-str">'algorand/keys'</span>
+)
+private_key = mnemonic.<span class="code-fn">to_private_key</span>(
+    secret[<span class="code-str">'data'</span>][<span class="code-str">'mnemonic'</span>]
+)</pre>
+          </div>
+          <div class="standards-list">
+            <div class="standard-item">24-word BIP39 mnemonics</div>
+            <div class="standard-item">xHD (BIP32/44) derivation</div>
+            <div class="standard-item">Hashicorp Vault (KV + Transit)</div>
+            <div class="standard-item">HSM via PKCS#11</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="resources-section">
+      <div class="resources-title">Resources for payments engineers</div>
+      <div class="resources-grid">
+        <a class="resource-card" href="#"><div class="resource-card-title">Payment integration quickstart</div><div class="resource-card-desc">Go from zero to confirmed transaction in under 15 minutes.</div><span class="resource-card-arrow">→ View guide</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">Atomic groups — multi-leg settlement</div><div class="resource-card-desc">Group debits and credits that succeed or fail together.</div><span class="resource-card-arrow">→ View guide</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">USDC on Algorand</div><div class="resource-card-desc">Asset IDs, settlement patterns, and integration reference.</div><span class="resource-card-arrow">→ View reference</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">ISO 20022 mapping</div><div class="resource-card-desc">How Algorand transaction types map to ISO 20022 messages.</div><span class="resource-card-arrow">→ View reference</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">REST API reference</div><div class="resource-card-desc">Full OpenAPI spec for algod and indexer.</div><span class="resource-card-arrow">→ View reference</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">Discord — #payments</div><div class="resource-card-desc">Connect with other payments engineers building on Algorand.</div><span class="resource-card-arrow">→ Join Discord</span></a>
+      </div>
+    </div>
+  </div>
+
+  <footer><div class="container"><div class="footer-inner"><div class="footer-left">Algorand Developer Portal</div><div class="footer-right">© 2026 Algorand Foundation</div></div></div></footer>
+</div>
+
+<!-- ==================== PATH 3: INSTITUTIONAL INFRA ==================== -->
+<div class="page" id="page-institutional">
+  <div class="path-page-hero">
+    <div class="container" style="position:relative;z-index:1">
+      <div class="path-breadcrumb">
+        <a href="#" onclick="showPage('home')">Developer Portal</a>
+        <span>/</span>
+        <span style="color:var(--algo-text)">Institutional infrastructure</span>
+      </div>
+      <div class="section-eyebrow">Path 3</div>
+      <h1>Build institutional infrastructure on Algorand.</h1>
+      <p class="path-intro">This path is for engineers building custody systems, institutional wallets, B2B settlement infrastructure, and compliance-grade signing flows. The assumption here is that you're not building a consumer product — you're building the infrastructure other products run on.<br><br>Algorand is designed to fit into this. Key management is decoupled. The REST layer speaks standard HTTP. The signing model supports multisig, rekeying, and hardware modules without workarounds.</p>
+      <div class="path-meta-tags">
+        <span class="path-meta-tag">Vault</span>
+        <span class="path-meta-tag">xHD wallets</span>
+        <span class="path-meta-tag">HSM / PKCS#11</span>
+        <span class="path-meta-tag">MPC</span>
+        <span class="path-meta-tag">native multisig</span>
+        <span class="path-meta-tag">rekeying</span>
+        <span class="path-meta-tag">passkey auth</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="steps-container">
+
+      <!-- STEP 1 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">01 / 05</div>
+          <div class="step-label">Start here</div>
+          <div class="step-nav-title">Understand the security model</div>
+          <div class="step-links">
+            <a class="step-link" href="#">Account model reference</a>
+            <a class="step-link" href="#">Rekeying guide</a>
+            <a class="step-link" href="#">Multisig accounts</a>
+            <a class="step-link" href="#">LogicSig reference</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">Authorization is enforced at the account level, chain-wide.</div>
+          <p>Every action on Algorand is authorized by a cryptographic signature tied to an account. There's no shared state, no global admin key, no contract owner pattern that can be exploited across accounts.</p>
+          <ul class="feature-list">
+            <li><strong>Rekeying:</strong> Any Algorand account can be rekeyed — signing authority transferred to a new key without changing the public address. Native to the protocol, not a contract hack. Useful for key rotation without address migration.</li>
+            <li><strong>Multisig:</strong> Native M-of-N multisig at the protocol level. No smart contract required. Thresholds set at account creation. Signatures collected off-chain and submitted as a single transaction.</li>
+            <li><strong>LogicSigs:</strong> Programmable signing conditions at the account level. Used for derived accounts, fee delegation, and custom authorization flows.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">02 / 05</div>
+          <div class="step-label">Bring your own KMS</div>
+          <div class="step-nav-title">Decouple key management</div>
+          <div class="step-links">
+            <a class="step-link" href="#">Key management guide</a>
+            <a class="step-link" href="#">Vault integration</a>
+            <a class="step-link" href="#">HSM integration (PKCS#11)</a>
+            <a class="step-link" href="#">xHD derivation</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">Algorand's SDK has no opinion about where your keys live.</div>
+          <p>The SDK handles transaction construction and signing. Key management is separate — you supply the signing function. This means your existing HSM, MPC setup, or Vault integration plugs in cleanly without any adaptation layer.</p>
+          <div class="standards-list">
+            <div class="standard-item">24-word BIP39 mnemonics</div>
+            <div class="standard-item">xHD (BIP32/44) derivation</div>
+            <div class="standard-item">Hashicorp Vault (KV + Transit)</div>
+            <div class="standard-item">HSM via PKCS#11</div>
+          </div>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-filename">hsm_signer.go</span>
+            </div>
+            <pre><span class="code-comment">// Go — custom signing function with HSM</span>
+<span class="code-kw">func</span> <span class="code-fn">hsmSign</span>(txn types.Transaction) ([]<span class="code-kw">byte</span>, error) {
+    txBytes := msgpack.<span class="code-fn">Encode</span>(txn)
+    signature, err := hsm.<span class="code-fn">Sign</span>(keyHandle, txBytes)
+    <span class="code-kw">if</span> err != <span class="code-kw">nil</span> {
+        <span class="code-kw">return</span> <span class="code-kw">nil</span>, err
+    }
+    <span class="code-kw">return</span> signature, <span class="code-kw">nil</span>
+}
+
+<span class="code-comment">// Pass your signing function to the client</span>
+client := algorand.<span class="code-fn">NewClientWithSigner</span>(algodClient, hsmSign)</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">03 / 05</div>
+          <div class="step-label">Transaction signing at scale</div>
+          <div class="step-nav-title">Build signing infrastructure</div>
+          <div class="step-links">
+            <a class="step-link" href="#">Multisig guide</a>
+            <a class="step-link" href="#">MPC integration reference</a>
+            <a class="step-link" href="#">Rekeying for key rotation</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">MPC, multisig, and threshold signing — all native.</div>
+          <p>Algorand's signing model is built for institutional use without workarounds.</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-filename">multisig.py</span>
+            </div>
+            <pre><span class="code-kw">from</span> algosdk.transaction <span class="code-kw">import</span> Multisig
+
+<span class="code-comment"># Create a 2-of-3 multisig account — no contract required</span>
+msig = <span class="code-fn">Multisig</span>(
+    version=<span class="code-num">1</span>,
+    threshold=<span class="code-num">2</span>,
+    addresses=[key1, key2, key3]
+)
+
+<span class="code-fn">print</span>(<span class="code-str">f"Multisig address: {msig.address()}"</span>)</pre>
+          </div>
+          <ul class="feature-list">
+            <li><strong>Native multisig:</strong> M-of-N at the protocol level. Signatures collected off-chain, submitted as one transaction. No contract, no oracle.</li>
+            <li><strong>MPC-compatible:</strong> Algorand uses Ed25519 — compatible with standard MPC protocols. Your existing MPC generates the signature; the SDK submits it.</li>
+            <li><strong>Rekeying for rotation:</strong> Rotate signing keys without changing the public address your counterparties know. On-chain address stays constant. Audit trail preserved on-chain.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">04 / 05</div>
+          <div class="step-label">For teams that need on-chain identity</div>
+          <div class="step-nav-title">Identity and compliance layer</div>
+          <div class="step-links">
+            <a class="step-link" href="#">Passkey authentication</a>
+            <a class="step-link" href="#">Algo:DID specification</a>
+            <a class="step-link" href="#">Box storage reference</a>
+            <a class="step-link" href="#">Custody SDK</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">DID, passkeys, and on-chain storage — without bolt-ons. <span class="optional-badge">optional</span></div>
+          <p>Algorand supports decentralized identity natively. If your institutional use case requires identity verification, credential management, or on-chain attestation, these are built into the protocol or available as first-party tooling.</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-filename">passkey_auth.ts</span>
+            </div>
+            <pre><span class="code-kw">import</span> { PasskeyAuth } <span class="code-kw">from</span> <span class="code-str">'@algorand/custody-sdk'</span>
+
+<span class="code-kw">const</span> auth = <span class="code-kw">new</span> <span class="code-fn">PasskeyAuth</span>({ network: <span class="code-str">'mainnet'</span> })
+
+<span class="code-comment">// Register a hardware key — YubiKey, biometric, etc.</span>
+<span class="code-kw">await</span> auth.<span class="code-fn">register</span>({
+  account: institutionalAccount,
+  authenticatorType: <span class="code-str">'hardware'</span>,
+})
+
+<span class="code-comment">// Authenticate — no password, no seed phrase exposure</span>
+<span class="code-kw">const</span> session = <span class="code-kw">await</span> auth.<span class="code-fn">authenticate</span>(institutionalAccount)</pre>
+          </div>
+          <ul class="feature-list">
+            <li><strong>Passkey auth:</strong> Hardware keys, biometrics, FIDO2. No password database, no credential exposure risk.</li>
+            <li><strong>Algo:DID:</strong> Decentralized identifiers anchored to Algorand accounts. Institutional identity management and verifiable credentials.</li>
+            <li><strong>Box storage:</strong> On-chain credential and data management. Persistent, structured, queryable.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step">
+        <div class="step-sidebar">
+          <div class="step-number">05 / 05</div>
+          <div class="step-label">Validation</div>
+          <div class="step-nav-title">Test before mainnet</div>
+          <div class="step-links">
+            <a class="step-link" href="#">LTN test suite</a>
+            <a class="step-link" href="#">Testnet vs LTN — when to use which</a>
+            <a class="step-link" href="#">End-to-end custody validation</a>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="step-headline">The LTN test suite — validate custody behavior end to end.</div>
+          <p>Before anything touches mainnet, Algorand's long-term test network (LTN) gives you a persistent, stable environment that mirrors mainnet behavior exactly. Unlike testnet, LTN isn't reset. State persists.</p>
+          <p>You can run full end-to-end custody validation — key rotation workflows, multisig signing flows, rekeying operations — in an environment that behaves exactly like production. When it works on LTN, it works on mainnet.</p>
+          <div class="callout">
+            <strong>Why LTN matters for institutional teams:</strong> Testnet resets periodically — you can't run long-lived custody workflows on it. LTN is persistent. Your test accounts, test transactions, and test state stay put between sessions. Run your compliance validation against a real environment, not a toy.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="resources-section">
+      <div class="resources-title">Resources for institutional builders</div>
+      <div class="resources-grid">
+        <a class="resource-card" href="#"><div class="resource-card-title">Institutional quickstart</div><div class="resource-card-desc">Set up key management, sign your first transaction.</div><span class="resource-card-arrow">→ View guide</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">Multisig and MPC patterns</div><div class="resource-card-desc">Reference implementations for common custody architectures.</div><span class="resource-card-arrow">→ View patterns</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">Rekeying reference</div><div class="resource-card-desc">Key rotation without address migration — full protocol reference.</div><span class="resource-card-arrow">→ View reference</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">Custody SDK</div><div class="resource-card-desc">React Native SDK for institutional wallets across iOS, Android, extensions.</div><span class="resource-card-arrow">→ View docs</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">LTN test suite</div><div class="resource-card-desc">Persistent test environment for end-to-end custody validation.</div><span class="resource-card-arrow">→ View docs</span></a>
+        <a class="resource-card" href="#"><div class="resource-card-title">Discord — #institutional</div><div class="resource-card-desc">Connect with other institutional builders and the Algorand team.</div><span class="resource-card-arrow">→ Join Discord</span></a>
+      </div>
+    </div>
+  </div>
+
+  <footer><div class="container"><div class="footer-inner"><div class="footer-left">Algorand Developer Portal</div><div class="footer-right">© 2026 Algorand Foundation</div></div></div></footer>
+</div>
+
+</body>
+</html>
